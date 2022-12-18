@@ -36,11 +36,13 @@ function render(countryData) {
     .map(
       ({ name, flags }) =>
         `<li>
-        <svg width="40" height="40">
-          <use href="${flags.svg}"></use>
+        <img src="${flags.svg}" alt="${name.official}" width="40" height="40">
       <h2>${name.official}</h2>
       </li>
       `
+
+      // <svg width="40" height="40">
+      //   <use href="${flags.svg}"></use>
     )
     .join('');
 
@@ -54,14 +56,16 @@ function render(countryData) {
     const DataOneEl = countryData.map(
       ({ name, flags, capital, population, languages }) =>
         `<li>
-        <svg width="80" height="80">
-          <use href="${flags.svg}"></use>
+        <img src="${flags.svg}" alt="${name.official}" width="80" height="80">
       <h1>${name.official}</h1>
       </li>
     <p class="text"><b>Capital:</b> ${capital}</p>
     <p class="text"><b>Population:</b> ${population}</p>
     <p class="text"><b>Languages:</b> ${Object.values(languages)}</p>
       `
+
+      // <svg width="80" height="80">
+      //   <use href="${flags.svg}"></use>
     );
     countryInfo.insertAdjacentHTML('beforeend', DataOneEl.join(''));
   } else if (countryData.length > 10) {
