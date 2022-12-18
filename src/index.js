@@ -1,5 +1,8 @@
-import './css/styles.css';
 import debounce from 'lodash.debounce';
+import { Notify } from 'notiflix';
+import './css/styles.css';
+
+import fetchCountries from '../fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -10,40 +13,60 @@ const countryInfo = document.querySelector('.country-info');
 console.dir(countryInfo);
 
 inputField.addEventListener(
-  'keydown',
+  'input',
   debounce(event => {
-    GetCountries({
-      name: inputField.value,
-    });
+    const inputValue = inputField.value;
+    if (inputValue === '') {
+      countryList.innerHTML = '';
+      countryInfo.innerHTML = '';
+      return;
+    }
+    fetchCountries(inputValue)
+      .then(render)
+      .catch(error => {
+        if (error && inputValue !== '') {
+          Notify.failure('Oops, there is no country with that name');
+        }
+      });
   }, DEBOUNCE_DELAY)
 );
 
-function GetCountries({ name }) {
-  const urlApi = `https://restcountries.com/v2/name/${name}?fields=name,capital,population,flags,languages`;
-  fetch(urlApi)
-    .then(res => {
-      if (res.status !== 200) {
-        console.log('Все что угодно, но не 200!');
-      }
-      return res.json();
-    })
-    .then(data => {
-      render(data);
-      console.log(data);
-    });
-}
-
 function render(countryData) {
-  countryInfo.innerHTML = '';
-  countryData.forEach(({ name, capital, population, flag, languages }) => {
-    const DataEl = `
-      < img src = "${flag}" alt = "${name}" />
-      <h1>${name}</h1>
-      <p>${capital}</p>
-      <p>${population}</p>
-      <p>${languages}</p>
-      `;
+  countryList.innerHTML = '';
+  const DataEl = countryData
+    .map(
+      ({ name, flags }) =>
+        `<li>
+        <svg width="40" height="40">
+          <use href="${flags.svg}"></use>
+      <h2>${name.official}</h2>
+      </li>
+      `
+    )
+    .join('');
 
-    countryInfo.insertAdjacentHTML('beforeend', DataEl);
-  });
+  console.log(countryData.length);
+
+  countryList.insertAdjacentHTML('beforeend', DataEl);
+
+  if (countryData.length === 1) {
+    countryInfo.innerHTML = '';
+    const DataOneEl = countryData.map(
+      ({ name, flags, capital, population, languages }) =>
+        `<li>
+        <svg width="80" height="80">
+          <use href="${flags.svg}"></use>
+      <h1>${name.official}</h1>
+      </li>
+    <p class="text"><b>Capital:</b> ${capital}</p>
+    <p class="text"><b>Population:</b> ${population}</p>
+    <p class="text"><b>Languages:</b> ${Object.values(languages)}</p>
+      `
+    );
+    countryInfo.insertAdjacentHTML('beforeend', DataOneEl.join(''));
+    countryList.innerHTML = '';
+  } else if (countryData.length > 10) {
+    Notify.info('Too many matches found. Please enter a more specific name.');
+    countryList.innerHTML = '';
+  }
 }
