@@ -50,6 +50,7 @@ function render(countryData) {
   countryInfo.innerHTML = '';
 
   if (countryData.length === 1) {
+    countryList.innerHTML = '';
     const DataOneEl = countryData.map(
       ({ name, flags, capital, population, languages }) =>
         `<li>
@@ -63,7 +64,6 @@ function render(countryData) {
       `
     );
     countryInfo.insertAdjacentHTML('beforeend', DataOneEl.join(''));
-    countryList.innerHTML = '';
   } else if (countryData.length > 10) {
     Notify.info('Too many matches found. Please enter a more specific name.');
     countryList.innerHTML = '';
