@@ -32,7 +32,6 @@ inputField.addEventListener(
 );
 
 function render(countryData) {
-  countryList.innerHTML = '';
   const DataEl = countryData
     .map(
       ({ name, flags }) =>
@@ -51,7 +50,6 @@ function render(countryData) {
   countryInfo.innerHTML = '';
 
   if (countryData.length === 1) {
-    countryInfo.innerHTML = '';
     const DataOneEl = countryData.map(
       ({ name, flags, capital, population, languages }) =>
         `<li>
