@@ -1,6 +1,5 @@
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix';
-import './css/styles.css';
 
 import fetchCountries from '../fetchCountries';
 
@@ -71,3 +70,5 @@ function render(countryData) {
     countryList.innerHTML = '';
   }
 }
+
+import './css/styles.css';
