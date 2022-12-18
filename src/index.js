@@ -48,6 +48,7 @@ function render(countryData) {
   console.log(countryData.length);
 
   countryList.insertAdjacentHTML('beforeend', DataEl);
+  countryInfo.innerHTML = '';
 
   if (countryData.length === 1) {
     countryInfo.innerHTML = '';
